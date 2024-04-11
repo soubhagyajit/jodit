@@ -42,7 +42,7 @@ export default function Home() {
         Jodit Rich Text Editor on the Web
         </span> 
         <div className='text-center'>Author : Soubhagyajit Borah</div>
-        <div className='text-center'>visit <a href="https://www.soubhagyajit.com/blogs/adding-Jodit-js-:-rich-text-editor-to-a-react-(next.js)-application" target='_blank' className="text-blue-500">www.soubhagyajit.com</a> for more information</div>
+        <div className='text-center'>visit <a href="https://www.soubhagyajit.com/blogs/how-to-add-jodit-editor-in-a-react-app-next-js" target='_blank' className="text-blue-500">www.soubhagyajit.com</a> for more information</div>
         </div>
         <div className="h-full w-[90vw]">
         {/* This is the main initialization of the Jodit editor */}
