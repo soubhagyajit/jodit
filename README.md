@@ -1,40 +1,125 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Integrating Jodit Rich Text Editor into a React Application with Next.js
+
+In this tutorial, we'll learn how to integrate the Jodit Rich Text Editor into a React application, specifically using Next.js. Jodit is a powerful WYSIWYG editor that provides a user-friendly interface for creating and editing rich text content.
+
+## Prerequisites
+
+- Basic knowledge of React and Next.js.
+- Node.js installed on your machine.
+- Familiarity with npm or yarn for package management.
 
 ## Getting Started
 
-First, run the development server:
+### Step 1: Setting Up a Next.js Project
+
+If you haven't already set up a Next.js project, you can create one using the following commands:
 
 ```bash
+npx create-next-app my-jodit-editor-app
+cd my-jodit-editor-app
+```
+## Step 2: Installing Jodit
+Next, we need to install the Jodit package along with its React wrapper:
+
+```
+npm install jodit-react
+# or
+yarn add jodit-react
+```
+
+## Step 3: Creating the Editor Component
+Create a new file named Editor.js inside the components directory of your Next.js project. This component will contain the Jodit editor.
+
+```
+/* Imports */
+import React, { useState, useRef, useMemo } from 'react';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+
+/* Using dynamic import of Jodit component as it can't render in server side*/
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
+
+/*functions*/
+export default function Home() {
+  const editor = useRef(null); //declared a null value 
+  const [content, setContent] = useState("Worlds best html page"); //declare using state
+
+  /* The most important point*/
+  const config = useMemo( //  Using of useMemo while make custom configuration is strictly recomended 
+    () => ({              //  if you don't use it the editor will lose focus every time when you make any change to the editor, even an addition of one character
+      /* Custom image uploader button configuretion to accept image and convert it to base64 format */
+      uploader: {         
+        insertImageAsBase64URI: true,
+        imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp'] // this line is not much important , use if you only strictly want to allow some specific image format
+      },
+    }),
+    []
+  );
+  /* function to handle the changes in the editor */
+  const handleChange = (value) => {
+    setContent(value);
+  };
+
+  return (
+    <>
+    {/* Below is a basic html page and we use Tailwind css to style*/}
+    <Head>
+      <title>Jodit Rich Text Editor on the Web | Soubhagyajit</title>
+      <meta name='author' content='Soubhagyajit Borah'/>
+    </Head>
+    <main>
+      <div className="h-screen w-screen flex items-center flex-col">
+        <div className="m-10  flex flex-col items-center">
+         <span className="text-2xl text-center">
+          
+        Jodit Rich Text Editor on the Web
+        </span> 
+        <div className='text-center'>Author : Soubhagyajit Borah</div>
+        <div className='text-center'>visit <a href="https://www.soubhagyajit.com/blogs/how-to-add-jodit-editor-in-a-react-app-next-js" target='_blank' className="text-blue-500">www.soubhagyajit.com</a> for more information</div>
+        </div>
+        <div className="h-full w-[90vw]">
+        {/* This is the main initialization of the Jodit editor */}
+          <JoditEditor 
+            ref={editor}            //This is important
+            value={content}         //This is important
+            config={config}         //Only use when you declare some custom configs
+            onChange={handleChange} //handle the changes
+            className="w-full h-[70%] mt-10 bg-white"
+            />
+            <style>
+              {`.jodit-wysiwyg{height:300px !important}`}
+            </style>
+        </div>
+
+        <div 
+        className="my-10 h-full w-[90vw]"
+        >Preview:
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+
+        </div>
+      </div>
+    </main>
+    </>
+  );
+}
+
+```
+Step 5: Running Your Next.js Application
+Finally, you can run your Next.js application using the following command:
+
+```
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Navigate to http://localhost:3000 in your web browser to see the Jodit Rich Text Editor integrated into your Next.js application.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Resources
+GitHub Repository: https://github.com/soubhagyajit/jodit
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Try on the web: https://jodit-alpha.vercel.app/
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Visit website for code breakdown : https://soubhagyajit.com/blogs/how-to-add-jodit-editor-in-a-react-app-next-js
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+That's it! You've successfully integrated the Jodit Rich Text Editor into your React (Next.js) application. Feel free to customize the editor's configuration and styling according to your requirements.
